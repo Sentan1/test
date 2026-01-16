@@ -4,9 +4,14 @@ import { Canvas, useFrame, ThreeElements } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sphere, Points, PointMaterial, Grid } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Fix: Robustly extend the global JSX namespace to include Three.js intrinsic elements provided by @react-three/fiber.
-// In React 19, augmenting the global JSX namespace ensures compatibility with the latest JSX transform and TypeScript configuration.
+// Correct React 19 JSX extension for Three.js elements
+// We extend both React.JSX and the global JSX namespace to ensure compatibility with various compiler settings for React 19
 declare global {
+  namespace React {
+    namespace JSX {
+      interface IntrinsicElements extends ThreeElements {}
+    }
+  }
   namespace JSX {
     interface IntrinsicElements extends ThreeElements {}
   }
@@ -76,7 +81,7 @@ const AnimatedShapes = () => {
         </Sphere>
       </Float>
 
-      {/* Scanning Wireframe Sphere */}
+      {/* Explicitly defined Three.js intrinsic elements now supported via the global JSX augmentation */}
       <mesh ref={wireframeRef} position={[-5, -2, -4]}>
         <sphereGeometry args={[2, 32, 32]} />
         <meshStandardMaterial 

@@ -4,38 +4,53 @@ import App from './App';
 
 /**
  * Shopify Theme Editor Compatibility Fix:
- * Ensure we only mount the application once and target the correct root element.
- * The editor often re-runs scripts or re-renders the DOM, so we check for
- * existing application markers.
+ * In the Editor, the script might be executed multiple times or the DOM 
+ * might be re-rendered via AJAX. We use a global flag to ensure 
+ * we only create the root once.
  */
 
-const init = () => {
+declare global {
+  interface Window {
+    __REACT_ROOT_INITIALIZED__?: boolean;
+  }
+}
+
+const mount = () => {
   const rootElement = document.getElementById('root');
 
   if (rootElement) {
-    // Check if the root has already been initialized to prevent multiple mounts in Editor
-    if (rootElement.children.length === 0) {
+    if (!window.__REACT_ROOT_INITIALIZED__) {
       try {
+        // Clear the loading placeholder if it exists
+        const placeholder = rootElement.querySelector('.shopify-section-loading-placeholder');
+        if (placeholder) {
+          rootElement.removeChild(placeholder);
+        }
+
         const root = ReactDOM.createRoot(rootElement);
         root.render(
           <React.StrictMode>
             <App />
           </React.StrictMode>
         );
+        window.__REACT_ROOT_INITIALIZED__ = true;
       } catch (error) {
         console.error("React mounting failed:", error);
       }
     }
   } else {
-    // In some Shopify configurations, the script might run before the DOM is fully ready
-    console.warn("Root element #root not found. Retrying in 100ms...");
-    setTimeout(init, 100);
+    // Retry once if the DOM isn't ready
+    setTimeout(() => {
+      const retryRoot = document.getElementById('root');
+      if (retryRoot && !window.__REACT_ROOT_INITIALIZED__) {
+        mount();
+      }
+    }, 100);
   }
 };
 
-// Start initialization
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', mount);
 } else {
-  init();
+  mount();
 }

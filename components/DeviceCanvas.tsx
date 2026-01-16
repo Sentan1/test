@@ -12,9 +12,14 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Fix: Robustly extend the global JSX namespace to include Three.js intrinsic elements provided by @react-three/fiber.
-// In React 19, augmenting the global JSX namespace ensures compatibility with the latest JSX transform and TypeScript configuration.
+// Correct React 19 JSX extension for Three.js elements
+// We extend both React.JSX and the global JSX namespace to ensure compatibility with various compiler settings for React 19
 declare global {
+  namespace React {
+    namespace JSX {
+      interface IntrinsicElements extends ThreeElements {}
+    }
+  }
   namespace JSX {
     interface IntrinsicElements extends ThreeElements {}
   }
@@ -31,7 +36,6 @@ const BreathalyserModel = () => {
 
   return (
     <group ref={meshRef}>
-      {/* Device Body */}
       <RoundedBox args={[1.2, 2.5, 0.4]} radius={0.1} smoothness={4}>
         <meshPhysicalMaterial 
           color="#1A1A1A" 
@@ -41,13 +45,11 @@ const BreathalyserModel = () => {
         />
       </RoundedBox>
 
-      {/* Mouthpiece */}
       <mesh position={[0, 1.35, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.15, 0.15, 0.4, 32]} />
         <meshStandardMaterial color="#A4D266" roughness={0.1} />
       </mesh>
 
-      {/* Screen Area */}
       <mesh position={[0, 0.5, 0.21]}>
         <planeGeometry args={[0.9, 0.7]} />
         <MeshTransmissionMaterial 
@@ -63,7 +65,6 @@ const BreathalyserModel = () => {
         />
       </mesh>
 
-      {/* Sensor Indicator Light */}
       <mesh position={[0, -0.2, 0.21]}>
         <circleGeometry args={[0.03, 32]} />
         <meshStandardMaterial 
@@ -73,7 +74,6 @@ const BreathalyserModel = () => {
         />
       </mesh>
 
-      {/* Branding detail */}
       <mesh position={[0, -0.8, 0.21]}>
         <planeGeometry args={[0.4, 0.1]} />
         <meshStandardMaterial color="#444" transparent opacity={0.5} />
