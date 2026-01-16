@@ -9,6 +9,9 @@ import { ImpactMetrics } from './components/ImpactMetrics';
 import { TeamSection } from './components/TeamSection';
 import { Footer } from './components/Footer';
 import { AIConsultant } from './components/AIConsultant';
+import { ProductSection } from './components/ProductSection';
+import { CartProvider } from './components/CartProvider';
+import { CartDrawer } from './components/CartDrawer';
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -22,36 +25,43 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen selection:bg-[#A4D266] selection:text-white">
-      <Header scrolled={scrolled} />
-      
-      <main>
-        <Hero />
+    <CartProvider>
+      <div className="min-h-screen selection:bg-[#A4D266] selection:text-white">
+        <Header scrolled={scrolled} />
+        <CartDrawer />
         
-        <div id="about">
-          <Introduction />
-        </div>
+        <main>
+          <Hero />
+          
+          <div id="shop">
+            <ProductSection />
+          </div>
 
-        <div id="technology">
-          <ScienceSection />
-        </div>
+          <div id="about">
+            <Introduction />
+          </div>
 
-        <div id="simulator" className="py-24 bg-stone-50">
-          <BACSimulator />
-        </div>
+          <div id="technology">
+            <ScienceSection />
+          </div>
 
-        <div id="impact">
-          <ImpactMetrics />
-        </div>
+          <div id="simulator" className="py-24 bg-stone-50">
+            <BACSimulator />
+          </div>
 
-        <div id="team">
-          <TeamSection />
-        </div>
-      </main>
+          <div id="impact">
+            <ImpactMetrics />
+          </div>
 
-      <AIConsultant />
-      <Footer />
-    </div>
+          <div id="team">
+            <TeamSection />
+          </div>
+        </main>
+
+        <AIConsultant />
+        <Footer />
+      </div>
+    </CartProvider>
   );
 };
 

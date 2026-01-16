@@ -5,14 +5,11 @@ import { Float, MeshDistortMaterial, Sphere, Points, PointMaterial, Grid } from 
 import * as THREE from 'three';
 
 // Fix: Robustly extend the global JSX namespace to include Three.js intrinsic elements provided by @react-three/fiber.
-// This ensures that elements like <mesh />, <ambientLight />, etc., are recognized by TypeScript in React 18/19 environments.
+// This ensures that elements like <mesh />, <ambientLight />, etc., are recognized by TypeScript.
 declare global {
   namespace JSX {
-    interface IntrinsicElements extends ThreeElements {}
-  }
-  namespace React {
-    namespace JSX {
-      interface IntrinsicElements extends ThreeElements {}
+    interface IntrinsicElements extends ThreeElements {
+      [elemName: string]: any;
     }
   }
 }

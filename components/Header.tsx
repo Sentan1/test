@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Shield, Menu, X } from 'lucide-react';
+import { Shield, Menu, X, ShoppingBag } from 'lucide-react';
+import { useCart } from './CartProvider';
 
 interface HeaderProps {
   scrolled: boolean;
@@ -8,12 +9,13 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ scrolled }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { cartCount, setIsCartOpen } = useCart();
 
   const navItems = [
     { name: 'Technology', href: '#technology' },
+    { name: 'Shop', href: '#shop' },
     { name: 'Simulator', href: '#simulator' },
     { name: 'Impact', href: '#impact' },
-    { name: 'Contact', href: '#contact' },
   ];
 
   return (
@@ -22,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ scrolled }) => {
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="w-8 h-8 text-accent" />
-            <span className="text-xl font-serif font-bold tracking-tight">ANDATECH <span className="font-sans font-light text-stone-400">PRESTIGE</span></span>
+            <span className="text-xl font-serif font-bold tracking-tight">ANDATECH <span className="font-sans font-light text-stone-400 uppercase text-sm tracking-tighter">Prestige</span></span>
           </div>
 
           <div className="hidden md:flex items-center gap-8">
@@ -35,8 +37,21 @@ export const Header: React.FC<HeaderProps> = ({ scrolled }) => {
                 {item.name}
               </a>
             ))}
+            
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 hover:bg-stone-50 rounded-full transition-all group"
+            >
+              <ShoppingBag className="w-6 h-6 text-stone-900 group-hover:text-accent transition-colors" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-accent text-stone-900 text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-in zoom-in duration-300">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
             <button className="bg-stone-900 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-accent hover:text-stone-900 transition-all">
-              Inquire Now
+              Quick Contact
             </button>
           </div>
 
@@ -61,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ scrolled }) => {
               </a>
             ))}
             <button className="bg-accent text-stone-900 px-8 py-4 rounded-xl font-bold mt-4">
-              Contact Sales
+              Shop Now
             </button>
           </div>
         </div>
