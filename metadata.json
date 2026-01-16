@@ -1,0 +1,7 @@
+{
+  "name": "Andatech Prestige - Excellence in Breathalysers",
+  "description": "A high-end, narrative-driven educational platform showcasing advanced breathalyser technology with interactive BAC simulations and 3D visualizations.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
