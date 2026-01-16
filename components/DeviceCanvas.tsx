@@ -13,13 +13,10 @@ import {
 import * as THREE from 'three';
 
 // Fix: Robustly extend the global JSX namespace to include Three.js intrinsic elements provided by @react-three/fiber.
-// We use the React.JSX namespace which is the standard for React 19.
-// Removed redundant manual index signature to resolve duplicate index signature errors.
+// This augmentation ensures that elements like <mesh>, <group>, and lights are recognized by the TypeScript compiler.
 declare global {
-  namespace React {
-    namespace JSX {
-      interface IntrinsicElements extends ThreeElements {}
-    }
+  namespace JSX {
+    interface IntrinsicElements extends ThreeElements {}
   }
 }
 

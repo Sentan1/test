@@ -1,0 +1,22 @@
+
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Andatech Prestige",
+    "theme_version": "1.0.0",
+    "theme_author": "Senior Engineering Team",
+    "theme_documentation_url": "https://andatech.com.au",
+    "theme_support_url": "https://andatech.com.au"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Accent Color",
+        "default": "#A4D266"
+      }
+    ]
+  }
+]

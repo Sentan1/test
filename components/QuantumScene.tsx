@@ -5,13 +5,10 @@ import { Float, MeshDistortMaterial, Sphere, Points, PointMaterial, Grid } from 
 import * as THREE from 'three';
 
 // Fix: Robustly extend the global JSX namespace to include Three.js intrinsic elements provided by @react-three/fiber.
-// We use the React.JSX namespace which is the standard for React 19.
-// Removed the redundant manual index signature as ThreeElements already provides one, avoiding duplicate index signature errors.
+// In React 19, augmenting the global JSX namespace is the standard way to provide types for non-HTML elements.
 declare global {
-  namespace React {
-    namespace JSX {
-      interface IntrinsicElements extends ThreeElements {}
-    }
+  namespace JSX {
+    interface IntrinsicElements extends ThreeElements {}
   }
 }
 
