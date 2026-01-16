@@ -1,12 +1,13 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Plus } from 'lucide-react';
+import { Star, Plus, ArrowUpRight } from 'lucide-react';
 import { useCart } from './CartProvider';
 
 const products = [
   {
-    id: 'fx-70',
+    id: 'gid://shopify/ProductVariant/123456789',
+    handle: 'andatech-fx-70',
     title: 'Andatech FX-70',
     subtitle: 'Professional Fuel Cell',
     price: 399,
@@ -15,7 +16,8 @@ const products = [
     tag: 'Bestseller'
   },
   {
-    id: 'fx-80',
+    id: 'gid://shopify/ProductVariant/987654321',
+    handle: 'andatech-fx-80',
     title: 'Andatech FX-80',
     subtitle: 'Industrial High-Volume',
     price: 549,
@@ -24,7 +26,8 @@ const products = [
     tag: 'Precision Standard'
   },
   {
-    id: 'alcosense-pro',
+    id: 'gid://shopify/ProductVariant/456789123',
+    handle: 'alcosense-pro-2',
     title: 'AlcoSense Pro 2',
     subtitle: 'Premium Personal Device',
     price: 289,
@@ -45,44 +48,67 @@ export const ProductSection: React.FC = () => {
             <span className="text-accent text-xs font-bold uppercase tracking-[0.4em] mb-4 block">The Collection</span>
             <h2 className="text-4xl md:text-6xl font-serif text-stone-900 leading-tight">Elite Accuracy <br /> For Every Need.</h2>
           </div>
-          <p className="text-stone-500 max-w-sm mb-2">Each device in our professional range is individually calibrated and certified to Australian Standard AS3547.</p>
+          <p className="text-stone-500 max-w-sm mb-2 leading-relaxed">
+            Each device in our professional range is individually calibrated and certified to Australian Standard AS3547:2019.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {products.map((product) => (
             <motion.div
               key={product.id}
-              whileHover={{ y: -10 }}
-              className="group relative bg-white rounded-[40px] overflow-hidden shadow-2xl shadow-stone-200/50 p-6 flex flex-col"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -12 }}
+              className="group relative bg-white rounded-[40px] overflow-hidden shadow-2xl shadow-stone-200/40 p-6 flex flex-col transition-all duration-500"
             >
               <div className="relative aspect-square rounded-[32px] overflow-hidden bg-stone-100 mb-8">
-                <img src={product.image} alt={product.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <img 
+                  src={product.image} 
+                  alt={product.title} 
+                  className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" 
+                />
+                
+                {/* Overlay on hover */}
+                <div className="absolute inset-0 bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
                 <div className="absolute top-4 left-4">
-                  <span className="px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-stone-900 text-[10px] font-bold uppercase tracking-widest border border-stone-100">
+                  <span className="px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md text-stone-900 text-[10px] font-bold uppercase tracking-widest border border-stone-100 shadow-sm">
                     {product.tag}
                   </span>
                 </div>
+
                 <button 
                   onClick={() => addToCart({ ...product, quantity: 1 })}
-                  className="absolute bottom-4 right-4 w-14 h-14 bg-stone-900 text-white rounded-full flex items-center justify-center opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all hover:bg-accent hover:text-stone-900 shadow-xl"
+                  className="absolute bottom-6 right-6 w-16 h-16 bg-stone-900 text-white rounded-full flex items-center justify-center opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 hover:bg-accent hover:text-stone-900 shadow-2xl z-10"
                 >
-                  <Plus className="w-6 h-6" />
+                  <Plus className="w-8 h-8" />
                 </button>
               </div>
 
-              <div className="flex-1">
-                <div className="flex items-center gap-1 mb-3">
+              <div className="flex-1 px-2">
+                <div className="flex items-center gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`w-3 h-3 ${i < Math.floor(product.rating) ? 'text-accent fill-accent' : 'text-stone-200'}`} />
+                    <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? 'text-accent fill-accent' : 'text-stone-200'}`} />
                   ))}
-                  <span className="text-[10px] text-stone-400 font-bold ml-1">{product.rating}</span>
+                  <span className="text-[11px] text-stone-400 font-bold ml-1.5 uppercase tracking-tighter">Verified: {product.rating}</span>
                 </div>
-                <h3 className="text-2xl font-serif mb-1">{product.title}</h3>
-                <p className="text-stone-400 text-sm mb-6">{product.subtitle}</p>
                 
-                <div className="flex items-center justify-between pt-6 border-t border-stone-50">
-                  <span className="text-2xl font-bold text-stone-900">${product.price} <span className="text-sm font-normal text-stone-400">AUD</span></span>
-                  <button className="text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors">Details</button>
+                <h3 className="text-2xl font-serif mb-1.5 text-stone-900">{product.title}</h3>
+                <p className="text-stone-400 text-sm mb-8 font-medium italic">{product.subtitle}</p>
+                
+                <div className="flex items-center justify-between pt-6 border-t border-stone-100">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-0.5">Price</span>
+                    <span className="text-2xl font-bold text-stone-900 tracking-tight">
+                      ${product.price} <span className="text-sm font-normal text-stone-400">AUD</span>
+                    </span>
+                  </div>
+                  <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 hover:text-accent transition-colors group/btn">
+                    View Details
+                    <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                  </button>
                 </div>
               </div>
             </motion.div>

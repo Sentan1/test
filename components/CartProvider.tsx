@@ -2,7 +2,8 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface CartItem {
-  id: string;
+  id: string; // This would be the Shopify Variant ID
+  handle: string; // The Shopify product handle
   title: string;
   price: number;
   quantity: number;
@@ -12,6 +13,7 @@ interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
+  updateQuantity: (id: string, delta: number) => void;
   removeFromCart: (id: string) => void;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
@@ -36,6 +38,15 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsCartOpen(true);
   };
 
+  const updateQuantity = (id: string, delta: number) => {
+    setCart(prev => prev.map(item => {
+      if (item.id === id) {
+        return { ...item, quantity: Math.max(1, item.quantity + delta) };
+      }
+      return item;
+    }));
+  };
+
   const removeFromCart = (id: string) => {
     setCart(prev => prev.filter(item => item.id !== id));
   };
@@ -44,7 +55,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, isCartOpen, setIsCartOpen, cartTotal, cartCount }}>
+    <CartContext.Provider value={{ 
+      cart, 
+      addToCart, 
+      updateQuantity, 
+      removeFromCart, 
+      isCartOpen, 
+      setIsCartOpen, 
+      cartTotal, 
+      cartCount 
+    }}>
       {children}
     </CartContext.Provider>
   );
