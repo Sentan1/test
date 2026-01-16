@@ -1,6 +1,5 @@
-
 import React, { useRef } from 'react';
-import { Canvas, useFrame, ThreeElements } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { 
   OrbitControls, 
   PerspectiveCamera, 
@@ -12,18 +11,17 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Correct React 19 JSX extension for Three.js elements
-// We extend both React.JSX and the global JSX namespace to ensure compatibility with various compiler settings for React 19
-declare global {
-  namespace React {
-    namespace JSX {
-      interface IntrinsicElements extends ThreeElements {}
-    }
-  }
-  namespace JSX {
-    interface IntrinsicElements extends ThreeElements {}
-  }
-}
+// Use type-safe aliases for Three.js intrinsic elements to resolve JSX namespace errors
+const ThreeGroup = 'group' as any;
+const ThreeMesh = 'mesh' as any;
+const ThreeMeshPhysicalMaterial = 'meshPhysicalMaterial' as any;
+const ThreeMeshStandardMaterial = 'meshStandardMaterial' as any;
+const ThreeCylinderGeometry = 'cylinderGeometry' as any;
+const ThreePlaneGeometry = 'planeGeometry' as any;
+const ThreeCircleGeometry = 'circleGeometry' as any;
+const ThreeAmbientLight = 'ambientLight' as any;
+const ThreeSpotLight = 'spotLight' as any;
+const ThreePointLight = 'pointLight' as any;
 
 const BreathalyserModel = () => {
   const meshRef = useRef<THREE.Group>(null!);
@@ -35,9 +33,9 @@ const BreathalyserModel = () => {
   });
 
   return (
-    <group ref={meshRef}>
+    <ThreeGroup ref={meshRef}>
       <RoundedBox args={[1.2, 2.5, 0.4]} radius={0.1} smoothness={4}>
-        <meshPhysicalMaterial 
+        <ThreeMeshPhysicalMaterial 
           color="#1A1A1A" 
           roughness={0.2} 
           metalness={0.8} 
@@ -45,13 +43,13 @@ const BreathalyserModel = () => {
         />
       </RoundedBox>
 
-      <mesh position={[0, 1.35, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.15, 0.15, 0.4, 32]} />
-        <meshStandardMaterial color="#A4D266" roughness={0.1} />
-      </mesh>
+      <ThreeMesh position={[0, 1.35, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <ThreeCylinderGeometry args={[0.15, 0.15, 0.4, 32]} />
+        <ThreeMeshStandardMaterial color="#A4D266" roughness={0.1} />
+      </ThreeMesh>
 
-      <mesh position={[0, 0.5, 0.21]}>
-        <planeGeometry args={[0.9, 0.7]} />
+      <ThreeMesh position={[0, 0.5, 0.21]}>
+        <ThreePlaneGeometry args={[0.9, 0.7]} />
         <MeshTransmissionMaterial 
           backside 
           samples={4} 
@@ -63,22 +61,22 @@ const BreathalyserModel = () => {
           temporalDistortion={0.1} 
           color="#111"
         />
-      </mesh>
+      </ThreeMesh>
 
-      <mesh position={[0, -0.2, 0.21]}>
-        <circleGeometry args={[0.03, 32]} />
-        <meshStandardMaterial 
+      <ThreeMesh position={[0, -0.2, 0.21]}>
+        <ThreeCircleGeometry args={[0.03, 32]} />
+        <ThreeMeshStandardMaterial 
           color="#A4D266" 
           emissive="#A4D266" 
           emissiveIntensity={4} 
         />
-      </mesh>
+      </ThreeMesh>
 
-      <mesh position={[0, -0.8, 0.21]}>
-        <planeGeometry args={[0.4, 0.1]} />
-        <meshStandardMaterial color="#444" transparent opacity={0.5} />
-      </mesh>
-    </group>
+      <ThreeMesh position={[0, -0.8, 0.21]}>
+        <ThreePlaneGeometry args={[0.4, 0.1]} />
+        <ThreeMeshStandardMaterial color="#444" transparent opacity={0.5} />
+      </ThreeMesh>
+    </ThreeGroup>
   );
 };
 
@@ -87,9 +85,9 @@ export const DeviceCanvas: React.FC = () => {
     <div className="w-full h-full cursor-grab active:cursor-grabbing">
       <Canvas shadows dpr={[1, 2]}>
         <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={35} />
-        <ambientLight intensity={0.5} />
-        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={10} castShadow />
-        <pointLight position={[-10, -10, -10]} intensity={2} />
+        <ThreeAmbientLight intensity={0.5} />
+        <ThreeSpotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={10} castShadow />
+        <ThreePointLight position={[-10, -10, -10]} intensity={2} />
         <Environment preset="city" />
         
         <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>

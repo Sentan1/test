@@ -1,21 +1,16 @@
-
 import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame, ThreeElements } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sphere, Points, PointMaterial, Grid } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Correct React 19 JSX extension for Three.js elements
-// We extend both React.JSX and the global JSX namespace to ensure compatibility with various compiler settings for React 19
-declare global {
-  namespace React {
-    namespace JSX {
-      interface IntrinsicElements extends ThreeElements {}
-    }
-  }
-  namespace JSX {
-    interface IntrinsicElements extends ThreeElements {}
-  }
-}
+// Use type-safe aliases for Three.js intrinsic elements to resolve JSX namespace errors
+const ThreeMesh = 'mesh' as any;
+const ThreeSphereGeometry = 'sphereGeometry' as any;
+const ThreeMeshStandardMaterial = 'meshStandardMaterial' as any;
+const ThreeColor = 'color' as any;
+const ThreeAmbientLight = 'ambientLight' as any;
+const ThreeSpotLight = 'spotLight' as any;
+const ThreeFog = 'fog' as any;
 
 const DataCloud = () => {
   const pointsRef = useRef<THREE.Points>(null!);
@@ -32,8 +27,10 @@ const DataCloud = () => {
   }, []);
 
   useFrame((state) => {
-    pointsRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
-    pointsRef.current.rotation.x = state.clock.getElapsedTime() * 0.02;
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
+      pointsRef.current.rotation.x = state.clock.getElapsedTime() * 0.02;
+    }
   });
 
   return (
@@ -81,10 +78,9 @@ const AnimatedShapes = () => {
         </Sphere>
       </Float>
 
-      {/* Explicitly defined Three.js intrinsic elements now supported via the global JSX augmentation */}
-      <mesh ref={wireframeRef} position={[-5, -2, -4]}>
-        <sphereGeometry args={[2, 32, 32]} />
-        <meshStandardMaterial 
+      <ThreeMesh ref={wireframeRef} position={[-5, -2, -4]}>
+        <ThreeSphereGeometry args={[2, 32, 32]} />
+        <ThreeMeshStandardMaterial 
           color="#A4D266" 
           wireframe 
           transparent 
@@ -92,7 +88,7 @@ const AnimatedShapes = () => {
           emissive="#A4D266"
           emissiveIntensity={0.5}
         />
-      </mesh>
+      </ThreeMesh>
 
       <Grid
         infiniteGrid
@@ -112,10 +108,10 @@ const AnimatedShapes = () => {
 export const QuantumScene: React.FC = () => {
   return (
     <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-      <color attach="background" args={['#F9F8F4']} />
-      <ambientLight intensity={0.8} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} />
-      <fog attach="fog" args={['#F9F8F4', 5, 25]} />
+      <ThreeColor attach="background" args={['#F9F8F4']} />
+      <ThreeAmbientLight intensity={0.8} />
+      <ThreeSpotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} />
+      <ThreeFog attach="fog" args={['#F9F8F4', 5, 25]} />
       <DataCloud />
       <AnimatedShapes />
     </Canvas>
